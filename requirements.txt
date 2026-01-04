@@ -1,0 +1,6 @@
+pycryptodome
+scikit-learn
+watchdog
+pandas
+numpy
+streamlit
