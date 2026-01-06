@@ -1,6 +1,8 @@
-import os
 import hmac
 from Crypto.Hash import SHA3_256
+import json
+from pathlib import Path
+BASELINE_FILE = Path(__file__).parent / "baselines.json"
 
 
 def generate_hmac(file_path: str, secret_key: bytes) -> str:
@@ -27,4 +29,23 @@ def verify_integrity(file_path: str, baseline_hmac: str, secret_key: bytes) -> s
     else:
         return "MISMATCH"
 
+def load_baselines() -> dict:
+    if BASELINE_FILE.exists():
+        with open(BASELINE_FILE, "r") as f:
+            return json.load(f)
+    return {}
+def save_baselines(baselines: dict) -> None:
+    with open(BASELINE_FILE, "w") as f:
+        json.dump(baselines, f, indent=4)
+def verify_with_baseline(file_path: str, secret_key: bytes) -> str:
+    baselines = load_baselines()
+    file_path = str(Path(file_path).resolve())
+
+    if file_path not in baselines:
+        baselines[file_path] = generate_hmac(file_path, secret_key)
+        save_baselines(baselines)
+        return "BASELINE_CREATED"
+
+    baseline_hmac = baselines[file_path]
+    return verify_integrity(file_path, baseline_hmac, secret_key)
 
