@@ -1,3 +1,12 @@
+# ==========================================================
+# CRYPTO MODULE – FROZEN
+# Do not modify without team discussion
+# Phases 1–3 complete:
+# - HMAC-SHA3-256
+# - Persistent baseline storage
+# - Secure key management (env-based)
+# ==========================================================
+import os
 import hmac
 from Crypto.Hash import SHA3_256
 import json
@@ -49,3 +58,19 @@ def verify_with_baseline(file_path: str, secret_key: bytes) -> str:
     baseline_hmac = baselines[file_path]
     return verify_integrity(file_path, baseline_hmac, secret_key)
 
+def get_secret_key() -> bytes:
+    key = os.getenv("FIM_SECRET_KEY")
+    if not key:
+        raise RuntimeError("FIM_SECRET_KEY not set in environment")
+    return key.encode()
+def crypto_check(file_path: str) -> dict:
+    secret_key = get_secret_key()
+
+    status = verify_with_baseline(file_path, secret_key)
+    hmac_value = generate_hmac(file_path, secret_key)
+
+    return {
+        "file_path": str(Path(file_path).resolve()),
+        "hmac": hmac_value,
+        "integrity_status": status
+    }
