@@ -4,30 +4,7 @@ import pandas as pd
 # Load trained model
 model = joblib.load("ml/fim_rf_model.pkl")
 
-# 🔑 Label mapping
-LABEL_MAP = {
-    "benign": 0,
-    "malicious": 1
-}
-
-def predict_risk(file_metadata: dict):
-    """
-    file_metadata example:
-    {
-        "file_extension": ".exe",
-        "process_type": "user_edit",
-        "size_before_kb": 1200,
-        "size_after_kb": 1700,
-        "time_gap_seconds": 10,
-        "files_modified_in_window": 5,
-        "filename_entropy": 4.3,
-        "size_change_ratio": 1.42,
-        "is_executable": 1,
-        "high_entropy_flag": 1,
-        "mass_change_flag": 1
-    }
-    """
-
+def predict_label(file_metadata: dict):
     features = pd.DataFrame([{
         "file_extension": file_metadata["file_extension"],
         "process_type": file_metadata["process_type"],
@@ -42,11 +19,8 @@ def predict_risk(file_metadata: dict):
         "mass_change_flag": file_metadata["mass_change_flag"]
     }])
 
-    # 🔮 Predict
-    label_str = model.predict(features)[0]
-
-    # 🔁 Map to numeric output
-    return LABEL_MAP[label_str]
+    label = model.predict(features)[0]
+    return label
 
 
 if __name__ == "__main__":
@@ -64,6 +38,5 @@ if __name__ == "__main__":
         "mass_change_flag": 1
     }
 
-    result = predict_risk(sample)
-    print("Prediction (0=Benign, 1=Malicious):", result)
-
+    result = predict_label(sample)
+    print("Prediction:", result)
