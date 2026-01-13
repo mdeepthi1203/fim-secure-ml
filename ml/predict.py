@@ -1,3 +1,8 @@
+# ==================================================
+# ML MODULE – FROZEN
+# Feature schema and prediction interface finalized
+# ==================================================
+
 import joblib
 import pandas as pd
 
