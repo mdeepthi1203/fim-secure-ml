@@ -1,9 +1,0 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>FIM UI</title>
-</head>
-<body>
-  <h1>File Integrity Monitoring Dashboard</h1>
-</body>
-</html>
