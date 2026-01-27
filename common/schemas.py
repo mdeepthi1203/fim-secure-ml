@@ -1,3 +1,9 @@
+# ==================================================
+# ML MODULE – FROZEN
+# Feature schema and prediction interface finalized
+# ==================================================
+
+
 FileEvent = {
     "file_path": str,
     "event_type": str,
