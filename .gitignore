@@ -1,0 +1,9 @@
+# Runtime-generated crypto data
+crypto_engine/baselines.json
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Test artifacts
+test_sanity.txt
