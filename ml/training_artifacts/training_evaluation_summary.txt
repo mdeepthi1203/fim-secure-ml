@@ -1,0 +1,51 @@
+ML TRAINING & EVALUATION SUMMARY
+--------------------------------
+
+Model Used:
+Random Forest Classifier
+
+Training Type:
+Offline supervised learning
+
+Reason for Offline Training:
+The machine learning model is trained offline to ensure stable,
+reproducible predictions and to avoid instability and model
+poisoning during real-time deployment.
+
+Dataset Description:
+The dataset consists of labeled file behavior records categorized
+as benign or malicious. Each record represents a file modification
+event observed during monitoring.
+
+Features Used:
+- File extension
+- File execution type (executable / non-executable)
+- File size before modification
+- File size after modification
+- Size change ratio
+- File entropy
+- Time gap between modifications
+- Number of files modified within a time window
+- High entropy indicator
+- Mass file modification flag
+
+Training Process:
+1. Feature extraction from file behavior data
+2. Dataset labeling (benign / malicious)
+3. Train-validation split
+4. Random Forest model training
+5. Model validation using standard metrics
+
+Evaluation Metrics:
+- Accuracy
+- Precision
+- Recall
+- F1-score
+
+Metric Significance:
+Precision is prioritized to reduce false alarms, while recall ensures
+that malicious file changes are not missed.
+
+Deployment Strategy:
+After validation, the trained model is frozen and deployed strictly
+for inference during real-time file integrity monitoring.

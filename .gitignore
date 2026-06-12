@@ -7,3 +7,24 @@ __pycache__/
 
 # Test artifacts
 test_sanity.txt
+# Virtual environment
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary test files
+demo.txt
+demo (2).txt
+type1.txt
+us.txt
+
+# Executables
+*.exe

@@ -94,6 +94,45 @@ fi = pd.DataFrame({
 
 print("\nTop 10 important features:")
 print(fi.head(10))
+# -----------------------------
+# Evaluation on test data
+# -----------------------------
+y_pred = pipeline.predict(X_test)
+# -----------------------------
+# Evaluation Metrics
+# -----------------------------
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix
+)
+
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, pos_label="malicious")
+recall = recall_score(y_test, y_pred, pos_label="malicious")
+f1 = f1_score(y_test, y_pred, pos_label="malicious")
+
+cm = confusion_matrix(y_test, y_pred)
+TN, FP, FN, TP = cm.ravel()
+false_positive_rate = FP / (FP + TN)
+
+print("\nEvaluation Metrics:")
+print(f"Accuracy: {accuracy:.4f}")
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1-score: {f1:.4f}")
+print(f"False Positive Rate: {false_positive_rate:.4f}")
+
+print("\nConfusion Matrix:")
+print(cm)
+# -----------------------------
+# Feature importance
+# -----------------------------
+feature_names = pipeline.named_steps["preprocess"].get_feature_names_out()
+importances = pipeline.named_steps["model"].feature_importances_
+...
 
 # -----------------------------
 # Save model

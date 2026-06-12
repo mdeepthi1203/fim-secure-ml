@@ -11,12 +11,6 @@ from concurrent.futures import ThreadPoolExecutor
 # IMPORT FROZEN CRYPTO MODULE
 # ===============================
 from crypto_engine.crypto_engine import crypto_check
-# ===============================
-# IMPORT ML + RISK DECISION
-# ===============================
-from common.feature_engineering import extract_features
-from ml.predict import predict_risk
-from common.risk_decision import make_risk_decision
 
 # ===============================
 # CONFIGURATION
@@ -29,7 +23,7 @@ STABILITY_INTERVAL = 0.2
 STABILITY_WINDOW = 1.0
 MAX_WORKERS = 4
 
-IGNORED_EXTENSIONS = {".tmp", ".swp", ".log", ".DS_Store", ".lnk"}
+IGNORED_EXTENSIONS = {".tmp", ".swp", ".log", ".DS_Store"}
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -51,9 +45,6 @@ def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 def should_ignore(path):
-     # Ignore internal crypto baseline file
-    if "crypto_engine" in path and "baselines.json" in path:
-        return True
     _, ext = os.path.splitext(path)
     return ext in IGNORED_EXTENSIONS
 
@@ -63,45 +54,19 @@ def log_event(event):
             f.write(json.dumps(event) + "\n")
     print(event)
 
-def process_ml_and_decision(payload):
-    try:
-        crypto = payload.get("crypto_result")
-        file_event = payload.get("file_event")
+def forward_to_ml(payload):
+    """
+    Forward only meaningful crypto results to ML.
+    DELETE events are audit-only.
+    """
+    crypto = payload.get("crypto_result")
 
-        if crypto is None:
-            print("🟡 DELETE event → Audit only")
-            return
+    if crypto is None:
+        print("➡ Forwarded to ML: NO_CRYPTO_EVENT")
+        return
 
-        features = extract_features(file_event, crypto)
-        print("\nML FEATURE VECTOR (INPUT TO MODEL)")
-        print("---------------------------------")
-        print("{")
-        for key, value in features.items():
-            print(f'  "{key}": {value},')
-            print("}")
-
-        ml_label = predict_risk(features)
-
-        decision = make_risk_decision(
-            file_event=file_event,
-            crypto_result=crypto,
-            ml_label=ml_label
-        )
-
-        print("\nFINAL SYSTEM OUTPUT")
-        print("-------------------")
-        print(f"File           : {decision['file_path']}")
-        print(f"Event Type     : {file_event['event_type']}")
-        print(f"Integrity      : {decision['integrity_status']}")
-        print(f"ML Label       : {decision['ml_label']}")
-        print(f"Risk Level     : {decision['risk_level']}")
-        print(f"Final Decision : {decision['final_action']}\n")
-
-    except Exception as e:
-        print("❌ ERROR inside process_ml_and_decision:")
-        print(type(e).__name__, ":", e)
-
-
+    status = crypto.get("integrity_status", "UNKNOWN")
+    print("➡ Forwarded to ML:", status)
 
 def should_reprocess(path):
     try:
@@ -174,13 +139,8 @@ def stability_check(path, event_type):
             "crypto_result": crypto_result
         }
 
-
-
-
-
-
         log_event(payload)
-        process_ml_and_decision(payload)
+        forward_to_ml(payload)
 
     finally:
         with registry_lock:
@@ -213,8 +173,7 @@ class FileMonitorHandler(FileSystemEventHandler):
         }
 
         log_event(payload)
-        process_ml_and_decision(payload)
-
+        forward_to_ml(payload)
 
 # ===============================
 # MAIN
