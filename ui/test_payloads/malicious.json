@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-01-21T10:10:00Z",
+  "file_path": "/bin/su",
+  "integrity_status": "tampered",
+  "crypto_version": "sha256",
+  "event_type": "FIM_ALERT",
+  "severity": "HIGH"
+}

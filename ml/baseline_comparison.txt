@@ -1,0 +1,26 @@
+BASELINE COMPARISON: TRADITIONAL FIM vs PROPOSED ML-FIM
+-------------------------------------------------------
+
+Traditional File Integrity Monitoring (FIM):
+- Alerts generated for every integrity mismatch
+- No behavioral or contextual analysis
+- High number of false positives
+- Alert fatigue for security analysts
+
+Proposed ML-Based Intelligent FIM:
+- Uses cryptographic integrity verification (HMAC-SHA3-256)
+- Applies ML-based behavior classification
+- Integrity violations are correlated with behavior
+- Benign changes are logged without alerts
+- Alerts raised only for malicious activity
+
+Comparison Summary:
+
+| Aspect                | Traditional FIM | Proposed ML-FIM |
+|-----------------------|-----------------|-----------------|
+| Integrity Monitoring  | Yes             | Yes             |
+| Behavioral Analysis   | No              | Yes             |
+| ML Intelligence       | No              | Yes             |
+| False Alarm Rate      | High            | Reduced         |
+| Alert Fatigue         | High            | Low             |
+| Practical Usability   | Low             | High            |
