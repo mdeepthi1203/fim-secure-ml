@@ -78,7 +78,11 @@ The project follows the workflow shown below:
 6. The final decision and event details are logged for auditing and analysis.
 
 ---
+### System Workflow Diagram
 
+<p align="center">
+  <img src="images/system_workflow.jpeg" alt="System Workflow Diagram" width="450">
+</p>
 ## 📁 Project Structure
 
 ```text
@@ -94,6 +98,15 @@ fim-secure-ml/
 └── README.md              # Project documentation
 ```
 ---
+---
+
+## 🏛️ Detailed System Architecture
+
+The following diagram illustrates the complete workflow of the proposed hybrid File Integrity Monitoring framework.
+
+<p align="center">
+  <img src="images/detailed_flowchart.jpeg" alt="Detailed System Architecture" width="700">
+</p>
 
 ## 💻 Technology Stack
 
